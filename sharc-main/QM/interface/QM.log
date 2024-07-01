@@ -1,0 +1,87 @@
+ Initializing surfgen
+Program version: 2.8.8
+ Entering readinput().
+     readinput():  Control parameters read from surfgen.in
+            Atoms:     [  1  2  2  2  ]
+            Atom Count:[  1  3  ]
+     Loading irreducible representations....
+ WARNING:  Calling prepot() with jobtype.ne.0
+    Reading POTLIB related parameters
+Point to start MOLDEN recording  100   Record every    0 Points
+ Exiting readinput...
+ Entering Initialize()
+   Generating atom permutations
+            nPmt=                     6
+   Selecting feasible permutations
+   Failed to open connectivity file.
+   Skipping feasible permutation selections.
+   No permutations removed.
+    Reading coordinate set definitions.
+       generating                     9  sets
+     set    1 type=   0 scaling=   1 max order=   4 note:MORSE N-H
+     set    2 type=   0 scaling=   3 max order=   4 note:repulsive N-H
+     set    3 type=   0 scaling=   1 max order=   4 note:MORSE H-H
+     set    4 type=  -3 scaling=  -2 max order=   4 note:4cdp
+     set    5 type=   0 scaling=   2 max order=   4 note:GAUSS N-H 1
+     set    6 type=   0 scaling=   2 max order=   1 note:GAUSS H-H 2
+     set    7 type=   1 scaling=   2 max order=   4 note:29: angular section function
+     set    8 type=   0 scaling=   7 max order=   2 note:dist section funciton
+     set    9 type=  -2 scaling=  -1 max order=   4 note:OOP
+ Fitting Coordinate Sets Defined as:
+    Index  Set#  Type  Scaling Atoms        Scaling Parameters
+        1    1 stretch      1   1  2         0.90000000  1.50000000
+        2    1 stretch      1   1  3         0.90000000  1.50000000
+        3    1 stretch      1   1  4         0.90000000  1.50000000
+        4    2 stretch      3   1  2         0.90000000  2.00000000
+        5    2 stretch      3   1  3         0.90000000  2.00000000
+        6    2 stretch      3   1  4         0.90000000  2.00000000
+        7    3 stretch      1   2  3         0.90000000  1.50000000
+        8    3 stretch      1   2  4         0.90000000  1.50000000
+        9    3 stretch      1   3  4         0.90000000  1.50000000
+       10    4 4c-dotp     -2   1  2  3  4   0.10000000  2.60000000
+       11    4 4c-dotp     -2   1  3  2  4   0.10000000  2.60000000
+       12    4 4c-dotp     -2   1  4  2  3   0.10000000  2.60000000
+       13    5 stretch      2   1  2         0.90000000  2.00000000
+       14    5 stretch      2   1  3         0.90000000  2.00000000
+       15    5 stretch      2   1  4         0.90000000  2.00000000
+       16    6 stretch      2   2  3         0.60000000  1.40000000
+       17    6 stretch      2   2  4         0.60000000  1.40000000
+       18    6 stretch      2   3  4         0.60000000  1.40000000
+       19    7 bending      2   2  3  1      0.16000000  3.00000000
+       20    7 bending      2   2  4  1      0.16000000  3.00000000
+       21    7 bending      2   3  4  1      0.16000000  3.00000000
+       22    8 stretch      7   1  2         0.30000000  2.48000000
+       23    8 stretch      7   1  3         0.30000000  2.48000000
+       24    8 stretch      7   1  4         0.30000000  2.48000000
+       25    9 UmbrOOP     -1   1  2  3  4   0.11000000  2.30000000
+       Reading                      1  additional order restrictions.
+   Generating permutations for scaled coordinates
+   PMT[ 1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25
+   PMT[ 2]   2   1   3   5   4   6   7   9   8  11  10 -12  14  13  15  16  18  17  19  21  20  23  22  24 -25
+   PMT[ 3]   1   3   2   4   6   5   8   7   9 -10  12  11  13  15  14  17  16  18  20  19  21  22  24  23 -25
+   PMT[ 4]   2   3   1   5   6   4   9   7   8 -11 -12  10  14  15  13  18  16  17  21  19  20  23  24  22  25
+   PMT[ 5]   3   1   2   6   4   5   8   9   7  12 -10 -11  15  13  14  17  18  16  20  21  19  24  22  23  25
+   PMT[ 6]   3   2   1   6   5   4   9   8   7 -12 -11 -10  15  14  13  18  17  16  21  20  19  24  23  22 -25
+   Generating term list
+  Term definitions generated in   0.02 seconds
+   Partitioning term list
+  Terms classified into subgroups (Cycles) in   0.00 seconds
+   Examining block symmetry
+   Block symmetry #                      1
+     Permutation irrep  :    1
+     Inversion symmetry :    1
+   Block symmetry #                      2
+     Permutation irrep  :    2
+     Inversion symmetry :   -1
+   Generating Maptab
+     Entering genMaptab...
+     Maptab generated. nBasis=                  3665
+   Reading Hd from file hd.data
+     Program version: [2.8.8]
+     Description:high order tester
+     Order of Polynomial Contained in File:                     4
+   Hd Data Imported.
+   Contracted vector form generated.
+ Exiting Initialize()
+  Initializing module potlib...
+  Initialization complete.

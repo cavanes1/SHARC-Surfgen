@@ -1,0 +1,1 @@
+python /home/cavanes1/sharc/bin/wigner.py molden.freq -n 100
