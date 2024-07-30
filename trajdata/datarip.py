@@ -34,8 +34,11 @@ while go:
     step = 0
     for line in lines:
         if line[0:4] == "    ":
-            if not int(line.split()[0]) == step:
-                print("WARNING on time step " + str(step) + " of traj " + str(curr))
+            if "******" in line:
+                print("\nERROR on geometry (asterisks) of traj " + str(curr))
+                break
+            elif not int(line.split()[0]) == step:
+                print("\nWARNING on time step " + str(step) + " of traj " + str(curr))
             dgst.append(int(line.split()[2]))
             ener.append(float(line.split()[6]))
             kin.append(float(line.split()[4]))

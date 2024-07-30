@@ -2,6 +2,8 @@
 
 # settings
 mkplt = False # Make histogram
+outinit = True # initconds file is outside the directories
+deld = True # QM directories have been deleted
 
 # module import
 import numpy as np
@@ -11,6 +13,7 @@ if mkplt:
 from os import listdir
 import os
 import subprocess
+import sys
 print("\nModules imported")
 
 # analyze present directories
@@ -25,6 +28,8 @@ kins = []
 pots = []
 eners = []
 while go:
+    sys.stdout.write("\rExamining trajectory " + str(curr))
+    sys.stdout.flush()
     f = open("traj" + str(curr)  + "/output.lis", "r")
     lines = f.readlines()
     f.close()
@@ -39,61 +44,68 @@ while go:
     curr += 1
     if "traj" + str(curr) not in dirs:
         go = False
-# other energies
-Ekins = []
-Epots = []
-Etots = []
-inits = []
-conv = 27.211386246
-a0toA=0.52917721067
-print("Traj #      dEkin    dEpot    dEtot    dEsur")
-for i in range(curr - 1):
-    currdir = "traj" + str(i + 1)
-    f = open(currdir  + "/initconds", "r")
-    lines = f.readlines()
-    f.close()
-    # read initial condition
-    geom = []
-    veloc = []
-    for j in range(16+14*i+1,16+14*i+5):
-        geom.append(lines[j][:60])
-        veloc.append(lines[j][61:])
-    # write QM.in
-    f = open(currdir + "/QM/QM.in", "w")
-    f.write('     4\n            1313004601')
-    for j in range(len(geom)):
-        f.write("\n" + geom[j][1])
-        for val in geom[j][8:47].split():
-            f.write(format(float(val)*a0toA, "13.7f"))
-        f.write("   ")
-        for val in veloc[j].split():
-            f.write(format(float(val), "13.7f"))
-    f.close()
-    # run QM
-    os.system("chmod +x " + currdir  + "/QM/runQM.sh")
-    #os.system("cd " + currdir + ";QM/runQM.sh")
-    rv = subprocess.run(["sh", "QM/runQM.sh"],cwd=currdir,capture_output=True)
-    #h = open(str_target + '/runls', "w")
-    #h.write(rv.stdout.decode('utf8'))
-    #h.close()
-    # read QM.out
-    f = open(currdir  + "/QM/QM.out", "r")
-    QMlines = f.readlines()
-    f.close()
-    QME = float(QMlines[3].split()[2])*conv
-    # print energy data
-    Ekin = float(lines[22+14*i].split()[1])*conv
-    Epot = float(lines[24+14*i].split()[1])*conv
-    Etot = float(lines[26+14*i].split()[1])*conv
-    Ekins.append(Ekin)
-    Epots.append(Epot)
-    Etots.append(Etot)
-    nstr = format(i + 1, "8.0f")
-    kstr = format(Ekin - kins[i], "9.3f") #dEkin
-    pstr = format(pots[i] - Epot - 5.8, "9.3f") #dEpot
-    tstr = format(eners[i] - Etot - 5.8, "9.3f") #dEtot
-    sstr = format(pots[i] - QME, "9.3f") #dEsur
-    print(nstr + kstr + pstr + tstr + sstr)
+
+if not deld:
+    # other energies
+    Ekins = []
+    Epots = []
+    Etots = []
+    inits = []
+    conv = 27.211386246
+    a0toA=0.52917721067
+    print("Traj #      dEkin    dEpot    dEtot    dEsur")
+    if outinit:
+        f = open("../initconds", "r")
+        lines = f.readlines()
+        f.close()
+    for i in range(curr - 1):
+        currdir = "traj" + str(i + 1)
+        if not outinit:
+            f = open(currdir  + "/initconds", "r")
+            lines = f.readlines()
+            f.close()
+        # read initial condition
+        geom = []
+        veloc = []
+        for j in range(16+14*i+1,16+14*i+5):
+            geom.append(lines[j][:60])
+            veloc.append(lines[j][61:])
+        # write QM.in
+        f = open(currdir + "/QM/QM.in", "w")
+        f.write('     4\n            1313004601')
+        for j in range(len(geom)):
+            f.write("\n" + geom[j][1])
+            for val in geom[j][8:47].split():
+                f.write(format(float(val)*a0toA, "13.7f"))
+            f.write("   ")
+            for val in veloc[j].split():
+                f.write(format(float(val), "13.7f"))
+        f.close()
+        # run QM
+        os.system("chmod +x " + currdir  + "/QM/runQM.sh")
+        #os.system("cd " + currdir + ";QM/runQM.sh")
+        rv = subprocess.run(["sh", "QM/runQM.sh"],cwd=currdir,capture_output=True)
+        #h = open(str_target + '/runls', "w")
+        #h.write(rv.stdout.decode('utf8'))
+        #h.close()
+        # read QM.out
+        f = open(currdir  + "/QM/QM.out", "r")
+        QMlines = f.readlines()
+        f.close()
+        QME = float(QMlines[3].split()[2])*conv
+        # print energy data
+        Ekin = float(lines[22+14*i].split()[1])*conv
+        Epot = float(lines[24+14*i].split()[1])*conv
+        Etot = float(lines[26+14*i].split()[1])*conv
+        Ekins.append(Ekin)
+        Epots.append(Epot)
+        Etots.append(Etot)
+        nstr = format(i + 1, "8.0f")
+        kstr = format(Ekin - kins[i], "9.3f") #dEkin
+        pstr = format(pots[i] - Epot - 5.8, "9.3f") #dEpot
+        tstr = format(eners[i] - Etot - 5.8, "9.3f") #dEtot
+        sstr = format(pots[i] - QME, "9.3f") #dEsur
+        print(nstr + kstr + pstr + tstr + sstr)
 
 # determine range
 lowest = min(eners)
@@ -115,3 +127,5 @@ if mkplt:
     plt.savefig("edist.png")
     plt.close()
     print("\nPlot saved to edist.png")
+
+print(eners)
