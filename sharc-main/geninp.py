@@ -1,5 +1,5 @@
 # Before running, use wigner.py, then compile sharc-surfgen without field if targ is nonzero
-# Run using geninp.sh
+# Run using geninp.sh (make sure to chmod +x sharc-surfgen.x)
 # After running, compile sharc-surfgen with field if necessary, then submit SHARC with submit.sl or parallel.py
 
 # settings
@@ -177,4 +177,3 @@ for i in range(1,trajct+1):
         g.close()
     print("Writing trajectory directory " + str(i))
     rseed=rseed+1
-#f.close()
