@@ -141,8 +141,8 @@ for i in range(1,trajct+1):
     inpstr = ''' geomfile    "geom"
  veloc       {veltxt}
  
- nstates      2
- actstates    2
+ nstates      5
+ actstates    5
  state        2 mch
  coeff        auto
  rngseed       {rngseed}

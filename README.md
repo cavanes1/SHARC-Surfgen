@@ -10,6 +10,33 @@ Here are the very basics of using [SHARC](https://github.com/sharc-md/sharc) wit
 6. `make install`
 7. Add `source ~/sharc/bin/sharcvars.sh` to .bash_profile
 
+## Instructions
+The surfaces were tested with ifort and MKL library,
+To use the surface, first compile the reader, do:
+
+`cd QM/reader`
+`make`
+
+This should generate the potential energy surface reader surfgen.x,
+the dipole surface reader dip.x, and the qm.x that write out QM.out
+In each time step runQM.sh looks for all surfaces and print the result out.
+This is probably the most clumsy way to do this...
+In the main directory run:
+
+`./run.sh`
+
+to see the example,
+the example were initiatialize with random initial condition
+I know this is no good, but only for testing purpose,
+there is a molden.freq file to be used to generate initial condition with Wigner distribution
+
+The current known issue of dipole and soc surface is that they will blow up at
+very long distance. (potential energy surfaces usually behave better with the mores polynomial basis).
+Another issue is the energy degeneracy of s0 and s1 in NH radical region, which makes certain
+diabatization difficult and hard to comply with ab initio results. The two issues usually come into
+effect in asymptote region thus are neglected currently.
+For any question please feel free to reach out to [Yuchen Wang](https://github.com/ywang312)
+
 ## Tutorial
 This tutorial was provided to me by [Yuchen Wang](https://github.com/ywang312).
 
