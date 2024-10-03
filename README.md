@@ -15,6 +15,7 @@ The surfaces were tested with ifort and MKL library,
 To use the surface, first compile the reader, do:
 
 `cd QM/reader`
+
 `make`
 
 This should generate the potential energy surface reader surfgen.x,
