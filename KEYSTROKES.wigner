@@ -1,0 +1,1 @@
+python /home/cavanes1/sharc/bin/wigner.py sharc-main/molden.freq -n 5000
