@@ -8,7 +8,7 @@ ngrp=2
 groupsym=1,2
 groupprty=1,-1
 order=4
-inputfl='hd.data'
+inputfl='t1.data'
 /
 &MAKESURF
 /

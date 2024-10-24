@@ -7,7 +7,7 @@ order      = 4,
 ngrp       = 2,
 groupsym   = 1,2
 groupprty  = 1,-1
-inputfl    = 'hd.data'
+inputfl    = 'dip.data'
 /
 &MAKESURF
 /

@@ -335,7 +335,9 @@ SUBROUTINE readCoords()
   end do!i=1,nCoordSets
 
   !Generate coordinate inequality conditions for hddata
+  if(allocated(CoordCond))deallocate(CoordCond)
   allocate(CoordCond(nCoordCond+nAddCond,ncoord))
+  if(allocated(condRHS))deallocate(condRHS)
   allocate(condRHS(nCoordCond+nAddCond))
   nCoordCond=0
   CoordCond=0

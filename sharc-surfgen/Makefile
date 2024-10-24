@@ -1,6 +1,6 @@
 #Macro definition
 FC = ifort
-FFLAGS:=-O3 -qopenmp -I$(MKLROOT)/include/intel64/lp64 -I$(MKLROOT)/include
+FFLAGS:=-O3 -g -traceback -qopenmp -I$(MKLROOT)/include/intel64/lp64 -I$(MKLROOT)/include
 LDFLAGS =  $(SURFGEN)/lib/libsurfgen.a \
 					 $(MKLROOT)/lib/intel64/libmkl_blas95_lp64.a \
            $(MKLROOT)/lib/intel64/libmkl_lapack95_lp64.a \
@@ -11,21 +11,16 @@ LDFLAGS =  $(SURFGEN)/lib/libsurfgen.a \
            -Wl,--end-group -lpthread -lm
 LIBSURF =  hddata.o combinatorial.o progdata.o libutil.o libsym.o libinternal.o \
            io.o potlib.o getver.o
-OBJDIP = nn.o dms.o shepard.o sub.o orient.o dip.o
-OBJSOC = nn.o soc.o sub.o orient.o qm.o
+OBJSG  = nn.o dms.o shepard.o soc.o sub.o orient.o
 #end of Macro definition
 
-all:	lib surfgen dip qm
+all:	clean lib sg
 	
-surfgen:
-	$(FC) $(FFLAGS) -c surfgen.f90
-	$(FC) $(FFLAGS) -o surfgen.x surfgen.o libsurfgen.a $(LDFLAGS)
+sg:	$(OBJSG) surfgen.o
+	$(FC) $(FFLAGS) $(OBJSG) surfgen.o -o surfgen.x libsurfgen.a $(LDFLAGS)
 
-dip:	$(OBJDIP)
-	$(FC) $(FFLAGS) $(OBJDIP) -o dip.x $(LDFLAGS)
-
-qm:	$(OBJSOC)
-	$(FC) $(FFLAGS) $(OBJSOC) -o qm.x $(LDFLAGS)
+qm:	$(OBJSG) qm.o
+	$(FC) $(FFLAGS) $(OBJSG) -o qm.x $(LDFLAGS)
 	rm -f *.o *.mod
 
 lib:	$(LIBSURF)
@@ -36,19 +31,19 @@ lib:	$(LIBSURF)
 
 ./%.o : ./lib/%.f90
 	@echo ' Building file: $<'
-	$(FC) $(FCOPT) -c -o $@ $<
+	$(FC) $(FCOPT) -traceback -c -o $@ $<
 	@echo ' Finished building $<'
 	@echo ''
 
 ./%.o : ./lib/%.F90
 	@echo ' Building file: $<'
-	$(FC) $(FCOPT) -c -o $@ $<
+	$(FC) $(FCOPT) -traceback -c -o $@ $<
 	@echo ' Finished building $<'
 	@echo ''
 
 ./%.o : ./%.f90
 	@echo ' Building file: $<'
-	$(FC) $(FCOPT) -c -o $@ $<
+	$(FC) $(FCOPT) -traceback -c -o $@ $<
 	@echo ' Finished building $<'
 	@echo ''
 

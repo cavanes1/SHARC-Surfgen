@@ -11,31 +11,6 @@ module nnsoc
   character(len=99), dimension(:),  allocatable ::  wfile
   real*8 :: bonddiff
 end module nnsoc
-!===================================================================================
-subroutine dplcoord(natom,ncoords,cgeom,igeom)
-  implicit none
-  integer, intent(in) :: natom, ncoords
-  real*8, intent(in) :: cgeom(3,natom)
-  real*8, intent(out) :: igeom(ncoords)
-  real*8 :: dx(3),dcoord(12),x(3,4)
-  integer :: i,j,k,info
-
-  x=cgeom(1:3,1:4)
-  call order(x,info)
-
-  k=0
-  do i=1,natom-1
-    do j=i+1,natom
-      k=k+1
-      dx=cgeom(:,i)-cgeom(:,j)
-      igeom(k)=1.d0/sqrt(dot_product(dx,dx))
-    end do
-  end do
-
-  call OOP0(cgeom(:,1),cgeom(:,2),cgeom(:,3),cgeom(:,4),igeom(ncoords),dcoord,0)
-
-  return
-end
 !===============================================================================
 !initialize NN DMS
 subroutine socinit
