@@ -39,11 +39,9 @@ program main
   call SYSTEM("cp t1.in surfgen.in")
   call initPotential()
   call EvaluateSurfgen(geom,et,cgt,h,dcg)
-  cg(:,1,1)=cgt(:,1,1)
   call SYSTEM("cp dip.in surfgen.in")
   call dmsinit
   call EvaluateDipole(geom,dip)
-  dip(:,2,1)=-dip(:,1,2)
   call SYSTEM("cp soc.in surfgen.in")
   call socinit
   call Evaluateasoc(geom,soc)
@@ -76,21 +74,21 @@ program main
   write(101,"(2i2)")nstatestol,nstatestol
   write(101,"(10e14.6)")dip(1,1,1),z,dip(1,1,2),z,z,z,z,z,z,z
   write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
   write(101,"(2i2)")nstatestol,nstatestol
   write(101,"(10e14.6)")dip(2,1,1),z,dip(2,1,2),z,z,z,z,z,z,z
   write(101,"(10e14.6)")dip(2,2,1),z,dip(2,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
   write(101,"(2i2)")nstatestol,nstatestol
   write(101,"(10e14.6)")dip(3,1,1),z,dip(3,1,2),z,z,z,z,z,z,z
   write(101,"(10e14.6)")dip(3,2,1),z,dip(3,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
-  write(101,"(10e14.6)")dip(1,2,1),z,dip(1,2,2),z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
+  write(101,"(10e14.6)")z,z,z,z,z,z,z,z,z,z
   write(101,"(A)")
 !Gradient
   write(101,"(A)")"! 3 Gradient Vectors (5x4x3, real)"
@@ -164,11 +162,11 @@ program main
 !3
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 1 ms2 0"
   do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 2 ms2 0"
   do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 -1"
   do i=1,natoms
@@ -184,47 +182,47 @@ program main
   enddo
 !
 !4
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 1 ms2 0"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 2 ms2 0"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 -1"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 0"
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 1 s2 1 ms2 0"
   do i=1,natoms
     write(101,"(3e20.12)")z,z,z
   enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 1"
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 1 s2 2 ms2 0"
+  do i=1,natoms
+    write(101,"(3e20.12)")z,z,z
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 3 s2 1 ms2 -1"
+  do i=1,natoms
+    write(101,"(3e20.12)")z,z,z
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 3 s2 1 ms2 0"
+  do i=1,natoms
+    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 3 s2 1 ms2 1"
   do i=1,natoms
     write(101,"(3e20.12)")z,z,z
   enddo
 !
 !5
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 1 ms2 0"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 1 s2 2 ms2 0"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 -1"
-  do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
-  enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 0"
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 1 s2 1 ms2 0"
   do i=1,natoms
     write(101,"(3e20.12)")z,z,z
   enddo
-  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 1"
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 1 s2 2 ms2 0"
   do i=1,natoms
     write(101,"(3e20.12)")z,z,z
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 3 s2 1 ms2 -1"
+  do i=1,natoms
+    write(101,"(3e20.12)")z,z,z
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 3 s2 1 ms2 0"
+  do i=1,natoms
+    write(101,"(3e20.12)")z,z,z
+  enddo
+  write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 3 s2 1 ms2 1"
+  do i=1,natoms
+    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
   enddo
 !
 
