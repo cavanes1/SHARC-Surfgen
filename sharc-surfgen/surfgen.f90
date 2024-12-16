@@ -118,7 +118,7 @@ program main
 !1
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 1 s1 1 ms1 0   m2 1 s2 1 ms2 0"
   do i=1,natoms
-    write(101,"(3e20.12)")cg((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 1 s1 1 ms1 0   m2 1 s2 2 ms2 0"
   do i=1,natoms
@@ -144,7 +144,7 @@ program main
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 1 s1 2 ms1 0   m2 1 s2 2 ms2 0"
   do i=1,natoms
-    write(101,"(3e20.12)")cg((3*i-2):(3*i),2,2)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 1 s1 2 ms1 0   m2 3 s2 1 ms2 -1"
   do i=1,natoms
@@ -170,7 +170,7 @@ program main
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 -1"
   do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 -1   m2 3 s2 1 ms2 0"
   do i=1,natoms
@@ -196,7 +196,7 @@ program main
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 3 s2 1 ms2 0"
   do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 0   m2 3 s2 1 ms2 1"
   do i=1,natoms
@@ -222,7 +222,7 @@ program main
   enddo
   write(101,"(2i2,x,A)")natoms,ndim,"! m1 3 s1 1 ms1 1   m2 3 s2 1 ms2 1"
   do i=1,natoms
-    write(101,"(3e20.12)")cgt((3*i-2):(3*i),1,1)
+    write(101,"(3e20.12)")z,z,z
   enddo
 !
 
