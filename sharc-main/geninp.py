@@ -148,7 +148,7 @@ for i in range(1,trajct+1):
  rngseed       {rngseed}
  
  ezero        0.0
- tmax         500.0
+ tmax         1000.0
  stepsize     0.5
  nsubsteps    25
  
