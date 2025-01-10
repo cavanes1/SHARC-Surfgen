@@ -1,5 +1,5 @@
-tot = 3000 # total number of trajectories
-jobs = 10 # number of jobs to run
+tot = 5000 # total number of trajectories
+jobs = 20 # number of jobs to run
 
 # Module import
 import os
@@ -9,8 +9,8 @@ text = '''#!/bin/bash -l
 
 #SBATCH --partition=parallel
 #SBATCH -c 25
-#SBATCH --time=36:00:00
-#SBATCH --job-name=3RF{job}
+#SBATCH --time=72:00:00
+#SBATCH --job-name=MD{job}
 
 ml intel/2020.1
 ./run.sh {ST} {EN} > run{job}.log'''
