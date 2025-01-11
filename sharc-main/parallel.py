@@ -13,7 +13,7 @@ text = '''#!/bin/bash -l
 #SBATCH --job-name=MD{job}
 
 ml intel/2020.1
-./run.sh {ST} {EN} > run{job}.log'''
+./run.sh {ST} {EN}'''
 
 # Main code
 for i in range(jobs):
