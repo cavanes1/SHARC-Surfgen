@@ -1,7 +1,7 @@
 #!/bin/bash
   
 i=1
-m=10
+m=5000
 
 rm output.txt
 

@@ -1,3 +1,5 @@
+verbosity = 1 # usually 0, except 1 when testing/debugging
+
 import math
 
 def compute_distance(coord1, coord2):
@@ -42,15 +44,18 @@ while i < len(lines):
 
 # Print the parsed data
 for entry in data:
-    #print(f"Time: {entry['time']}")
-    #print(f"State 1: {entry['state1']}")
-    #print(f"State 2: {entry['state2']}")
-    #for atom_info in entry['atoms']:
-    #    atom = atom_info['atom']
-    #    coords = atom_info['coords']
-    #    print(f"{atom}: {coords}")
-    #print()
+    # Print information for debugging
+    if verbosity > 0:
+        print(f"\nTime: {entry['time']} fs")
+        print(f"diag: {entry['state1']}")
+        print(f"MCH:  {entry['state2']}")
+        for atom_info in entry['atoms']:
+            atom = atom_info['atom']
+            coords = atom_info['coords']
+            print(f"{atom}: {coords}")
+        print()
 
+    # Read atom positions
     n_coords = None
     h_coords = []
     for atom_info in entry['atoms']:
@@ -61,22 +66,46 @@ for entry in data:
         elif atom == 'H':
             h_coords.append(coords)
     
+    # Examine bond distances
+    NHdists = [] # angstroms
+    HHdists = []
     if n_coords is None or len(h_coords) < 3:
         print("Not enough atom coordinates.")
     else:
-        truncate = False
+        # NH
+        Hnum = 0
         for h_coord in h_coords:
+            Hnum += 1
             distance = compute_distance(n_coords, h_coord)
-            #print(f"Distance between N and H: {distance:.6f}")
-            if distance > 4:
+            NHdists.append(distance)
+            if verbosity > 0:
+                print(f"Distance between N  and H{Hnum}: {distance:.6f} angstroms")
+            # Terminate analysis
+            if distance > 5.29:
                 stop_processing = True
-                break
+        # HH
+        for h1 in range(3):
+            for h2 in range(h1 + 1, 3):
+                distance = compute_distance(h_coords[h1], h_coords[h2])
+                HHdists.append(distance)
+                if verbosity > 0:
+                    print(f"Distance between H{h1 + 1} and H{h2 + 1}: {distance:.6f} angstroms")
+                # Terminate analysis
+                if distance > 5.29:
+                    stop_processing = True
         
-        if stop_processing:
-            print(entry['time'])
-            print("Stopped due to distance > 4.")
-            print(f"State 1: {entry['state1']}")
-            print(f"State 2: {entry['state2']}")
+        # Determine product channel
+        channel = "UNDETERMINABLE" # needs to be manually examined
+        if stop_processing: # If distance between any 2 atoms > 5.29 Å, TRAJECTORY IS OVER
+            NHdists = sorted(NHdists)
+            HHdists = sorted(HHdists)
+            # If two N-H distances > 4 Å and if a N-H distance and H-H distance is under 2 Å
+            if NHdists[1] > 4 and NHdists[0] < 2 and HHdists[0] < 2:
+                channel = "molecular"
+            # Elif two N-H distances < 2 Å
+            elif NHdists[1] < 2:
+                channel = "radical"
+            # Save electronic state and quit
+            print(f"Stopped due to distance > 10 a.u. at {entry['time']} fs")
+            print(f"Channel: {channel}     diag: {entry['state1']}     MCH:  {entry['state2']}")
             break
-        
-    #print()
