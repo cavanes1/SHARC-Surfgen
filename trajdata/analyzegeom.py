@@ -1,6 +1,19 @@
+# Usage: python analyzegeom.py [trajectory] [verbosity]
 verbosity = 1 # usually 0, except 1 when testing/debugging
+traj = 0 # trajectory number, to name the generated xyz geometry file for the deciding time point
+         # set to 0 if you do not want to generate this geometry file
 
 import math
+import sys
+
+try:
+    traj = int(sys.argv[1])
+except:
+    pass
+try:
+    verbosity = int(sys.argv[2])
+except:
+    pass
 
 def compute_distance(coord1, coord2):
     return math.sqrt(sum((x - y) ** 2 for x, y in zip(coord1, coord2)))
@@ -108,4 +121,21 @@ for entry in data:
             # Save electronic state and quit
             print(f"Stopped due to distance > 10 a.u. at {entry['time']} fs")
             print(f"Channel: {channel}     diag: {entry['state1']}     MCH:  {entry['state2']}")
+            if traj > 0:
+                step = int(entry['time']*2)
+                f = open(str(traj) + ".xyz", "w")
+                for i in range(step*6, step*6 + 6):
+                    f.write(lines[i])
+                f.close()
             break
+
+if not stop_processing: # no dissociation
+    entry = data[-1]
+    print(f"Stopped due to no dissociation by {entry['time']} fs")
+    print(f"Result: NoDissociation     diag: {entry['state1']}     MCH:  {entry['state2']}")
+    if traj > 0:
+        step = int(entry['time']*2)
+        f = open(str(traj) + ".xyz", "w")
+        for i in range(step*6, step*6 + 6):
+            f.write(lines[i])
+        f.close()
