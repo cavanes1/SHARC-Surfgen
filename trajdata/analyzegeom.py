@@ -112,8 +112,8 @@ for entry in data:
         if stop_processing: # If distance between any 2 atoms > 5.29 Å, TRAJECTORY IS OVER
             NHdists = sorted(NHdists)
             HHdists = sorted(HHdists)
-            # If two N-H distances > 4 Å and if a N-H distance and H-H distance is under 2 Å
-            if NHdists[1] > 3.6 and NHdists[0] < 2 and HHdists[0] < 2:
+            # If two N-H distances > 3 Å and if a N-H distance and H-H distance is under 2 Å
+            if NHdists[1] > 3 and NHdists[0] < 2 and HHdists[0] < 2:
                 channel = "molecular"
             # Elif two N-H distances < 2 Å
             elif NHdists[1] < 2:
