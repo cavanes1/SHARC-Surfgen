@@ -1,5 +1,5 @@
 # Usage: python analyzegeom.py [trajectory] [verbosity]
-verbosity = 1 # usually 0, except 1 when testing/debugging
+verbosity = 2 # usually 1, except 2 when testing/debugging
 traj = 0 # trajectory number, to name the generated xyz geometry file for the deciding time point
          # set to 0 if you do not want to generate this geometry file
 
@@ -58,7 +58,7 @@ while i < len(lines):
 # Print the parsed data
 for entry in data:
     # Print information for debugging
-    if verbosity > 0:
+    if verbosity > 1:
         print(f"\nTime: {entry['time']} fs")
         print(f"diag: {entry['state1']}")
         print(f"MCH:  {entry['state2']}")
@@ -91,7 +91,7 @@ for entry in data:
             Hnum += 1
             distance = compute_distance(n_coords, h_coord)
             NHdists.append(distance)
-            if verbosity > 0:
+            if verbosity > 1:
                 print(f"Distance between N  and H{Hnum}: {distance:.6f} angstroms")
             # Terminate analysis
             if distance > 5.29:
@@ -101,7 +101,7 @@ for entry in data:
             for h2 in range(h1 + 1, 3):
                 distance = compute_distance(h_coords[h1], h_coords[h2])
                 HHdists.append(distance)
-                if verbosity > 0:
+                if verbosity > 1:
                     print(f"Distance between H{h1 + 1} and H{h2 + 1}: {distance:.6f} angstroms")
                 # Terminate analysis
                 if distance > 5.29:
@@ -121,6 +121,26 @@ for entry in data:
             # Save electronic state and quit
             print(f"Stopped due to distance > 10 a.u. at {entry['time']} fs")
             print(f"Channel: {channel}     diag: {entry['state1']}     MCH:  {entry['state2']}")
+            if verbosity > 0:
+                print("NHdists (angstrom):   ", end="")
+                for dist in NHdists:
+                    print(format(dist, ".2f") + "   ", end="")
+                print("\nHHdists (angstrom):   ", end="")
+                for dist in HHdists:
+                    print(format(dist, ".2f") + "   ", end="")
+                print()
+                # Print Hamiltonian (in a.u.)
+                step = int(entry['time']*2)
+                dat = open("output.dat", "r")
+                lines = dat.readlines()
+                dat.close()
+                #for i in range(35 + step*62, 35 + step*62 + 8):
+                #    print(lines[i][:-1])
+                for i in range(38 + step*62, 38 + step*62 + 5):
+                    for element in lines[i][:-1].split():
+                        print(format(float(element), "8.4f"), end="")
+                    print()
+            # Write geometry
             if traj > 0:
                 step = int(entry['time']*2)
                 f = open(str(traj) + ".xyz", "w")
@@ -133,6 +153,7 @@ if not stop_processing: # no dissociation
     entry = data[-1]
     print(f"Stopped due to no dissociation by {entry['time']} fs")
     print(f"Result: NoDissociation     diag: {entry['state1']}     MCH:  {entry['state2']}")
+    # Write geometry
     if traj > 0:
         step = int(entry['time']*2)
         f = open(str(traj) + ".xyz", "w")

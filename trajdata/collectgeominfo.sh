@@ -17,7 +17,7 @@ do
  echo "entering traj$i"
  echo "entering traj$i" >> ../output.txt
  cp ../analyzegeom.py .
- python analyzegeom.py $i 0 >> ../output.txt
+ python analyzegeom.py $i 1 >> ../output.txt
  cp $i.xyz ../GEOMS
  cd ..
  ((i++))
