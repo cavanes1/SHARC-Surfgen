@@ -132,12 +132,12 @@ for entry in data:
                 # Print Hamiltonian (in a.u.)
                 step = int(entry['time']*2)
                 dat = open("output.dat", "r")
-                lines = dat.readlines()
+                datlines = dat.readlines()
                 dat.close()
                 #for i in range(35 + step*62, 35 + step*62 + 8):
                 #    print(lines[i][:-1])
                 for i in range(38 + step*62, 38 + step*62 + 5):
-                    for element in lines[i][:-1].split():
+                    for element in datlines[i][:-1].split():
                         print(format(float(element), "8.4f"), end="")
                     print()
             # Write geometry
