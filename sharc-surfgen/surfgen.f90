@@ -7,7 +7,7 @@ program main
   real*8, parameter :: degree=acos(-1.d0)/180.d0
   character(3) :: sym
   real*8 :: anums
-  real*8  :: z,cgt(12,1,1),soc(2,3,2),diasoc(3,2)
+  real*8  :: z,cavity,dressed,cgt(12,1,1),soc(2,3,2),diasoc(3,2)
   !originally from surfgen.f90
   real*8, dimension(:), allocatable :: e,geom,veloc,et
   real*8, dimension(:,:), allocatable :: h,gref
@@ -62,11 +62,22 @@ program main
   enddo
   soc=soc/au2cm
   !Hermitian Hamiltonian
+  !Field off
   write(101,"(10e14.6)")e(1),z,z,z,soc(:,1,1),soc(:,2,1),soc(:,3,1)
   write(101,"(10e14.6)")z,z,e(2),z,soc(:,1,2),soc(:,2,2),soc(:,3,2)
   write(101,"(10e14.6)")soc(1,1,1),-soc(2,1,1),soc(1,1,2),-soc(2,1,2),et(1),z,z,z,z,z
   write(101,"(10e14.6)")soc(1,2,1),-soc(2,2,1),soc(1,2,2),-soc(2,2,2),z,z,et(1),z,z,z
   write(101,"(10e14.6)")soc(1,3,1),-soc(2,3,1),soc(1,3,2),-soc(2,3,2),z,z,z,z,et(1),z
+  !Field on
+  !Electric field strength (a.u. = Ha/ea0) divided by 2
+  cavity=0.01*dip(3,1,2)
+  !Energy shift (a.u. = Ha)
+  dressed=0.113927d0
+  !write(101,"(10e14.6)")e(1)+dressed,z,cavity,z,soc(:,1,1),soc(:,2,1),soc(:,3,1)
+  !write(101,"(10e14.6)")cavity,z,e(2),z,soc(:,1,2),soc(:,2,2),soc(:,3,2)
+  !write(101,"(10e14.6)")soc(1,1,1),-soc(2,1,1),soc(1,1,2),-soc(2,1,2),et(1)+dressed,z,z,z,z,z
+  !write(101,"(10e14.6)")soc(1,2,1),-soc(2,2,1),soc(1,2,2),-soc(2,2,2),z,z,et(1)+dressed,z,z,z
+  !write(101,"(10e14.6)")soc(1,3,1),-soc(2,3,1),soc(1,3,2),-soc(2,3,2),z,z,z,z,et(1)+dressed,z
   write(101,"(A)")
 !dipole
   ndim=3

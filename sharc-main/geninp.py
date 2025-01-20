@@ -4,8 +4,9 @@
 
 # settings
 trajct = 5000 # number of trajectories to prepare
-targ = 8.6 # desired total trajectory energy (eV), 0 if not relevant
-tol = 0.1 # tolerance in total trajectory energy (eV)
+targ = 8.2 # desired total trajectory energy (eV), 0 if not relevant
+tol = 0.2 # tolerance in total trajectory energy (eV)
+redoing = False # use existing geninp.old (only do this if using energy bins)
 veloc = "external" # can be "random X.X", or "external" if using Wigner distribution
 randrot = True # randomize initial orientation
 
@@ -60,6 +61,17 @@ def rotator(x):
     mean_coord = np.mean(x, axis=0)
     return x @ M
 
+# Obtain energies from geninp.log
+prevEs = []
+if redoing:
+    print("Reading from geninp.old")
+    f = open("../geninp.old", "r")
+    genlines = f.readlines()
+    f.close()
+    for line in genlines:
+        if line.split()[1] == "of":
+            prevEs.append(float(line.split()[5]))
+
 # extract data from Wigner.py output
 conv = 27.211386246
 a0toA = 0.52917721067
@@ -74,11 +86,16 @@ if veloc == "external":
     print("Ninit = " + str(Ninit))
     currinit = 0
     currtraj = 1
-    while currtraj <= trajct: #Ninit
+    while currtraj <= trajct:
         currinit += 1
         if currinit > Ninit:
             exit("Not enough initial conditions")
+        #elif redoing and currinit > len(prevEs):
+        #    exit("Not enough energies in geninp.old")
         else:
+            if redoing and currinit > len(prevEs):
+                print("Not enough energies in geninp.old, evaluating energies from scratch now")
+                redoing = False
             geom = []
             veloclst = []
             for j in range(14*currinit+3, 14*currinit+7):
@@ -91,32 +108,40 @@ if veloc == "external":
                     vects.append([float(x) for x in veloclst[j].split()])
                 vects = rotator(np.array(vects))
             if not targ == 0: # if binning energies
-                # write QM.in
-                f = open("QM/QM.in", "w")
-                f.write('     4\n            1313004601')
-                for j in range(len(geom)):
-                    f.write("\n" + geom[j][1])
-                    for val in geom[j][8:47].split():
-                        f.write(format(float(val)*a0toA, "13.7f"))
-                    f.write("   ")
-                    for val in veloclst[j].split():
-                        f.write(format(float(val), "13.7f"))
-                f.close()
-                # run QM
-                rv = subprocess.run(["sh", "QM/inQM.sh"],cwd="./",capture_output=True)
-                # read QM.out
-                f = open("QM/QM.out", "r")
-                QMlines = f.readlines()
-                f.close()
-                QME = float(QMlines[3].split()[2])*conv
-                # energy analysis
-                Ekin = float(lines[8+14*currinit].split()[1])*conv
-                TE = QME + Ekin
-                print("Energy of initcond " + str(currinit) + " is " + format(TE, "9.3f"))
-                if TE > targ + tol or TE < targ - tol:
-                    print("Energy out of range")
-                    continue
-                print("Energy good, trajectory " + str(currtraj))
+                if redoing:
+                    TE = prevEs[currinit - 1]
+                    print("Energy of initcond " + str(currinit) + " was " + format(TE, "9.3f"))
+                    if TE > targ + tol or TE < targ - tol:
+                        print("Energy out of range")
+                        continue
+                    print("Energy good, trajectory " + str(currtraj))
+                else:
+                    # write QM.in
+                    f = open("QM/QM.in", "w")
+                    f.write('     4\n            1313004601')
+                    for j in range(len(geom)):
+                        f.write("\n" + geom[j][1])
+                        for val in geom[j][8:47].split():
+                            f.write(format(float(val)*a0toA, "13.7f"))
+                        f.write("   ")
+                        for val in veloclst[j].split():
+                            f.write(format(float(val), "13.7f"))
+                    f.close()
+                    # run QM
+                    rv = subprocess.run(["sh", "QM/inQM.sh"],cwd="./",capture_output=True)
+                    # read QM.out
+                    f = open("QM/QM.out", "r")
+                    QMlines = f.readlines()
+                    f.close()
+                    QME = float(QMlines[3].split()[2])*conv
+                    # energy analysis
+                    Ekin = float(lines[8+14*currinit].split()[1])*conv
+                    TE = QME + Ekin
+                    print("Energy of initcond " + str(currinit) + " is " + format(TE, "9.3f"))
+                    if TE > targ + tol or TE < targ - tol:
+                        print("Energy out of range")
+                        continue
+                    print("Energy good, trajectory " + str(currtraj))
             geoms.append([])
             velocs.append([])
             for j in range(len(geom)):
