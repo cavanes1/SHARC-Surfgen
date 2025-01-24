@@ -55,9 +55,11 @@ program main
 !set the bound to be 50cm-1
   do i=1,2
     do j=1,3
-      if(soc(1,j,i).gt.50d0 .or. soc(2,j,i).gt.50d0) then
-        soc(:,j,i)=50d0
-      endif
+      do k=1,2
+        if(abs(soc(k,j,i)).gt.50d0) then
+          soc(k,j,i)=sign(50d0, soc(k,j,i))
+        endif
+      enddo
     enddo
   enddo
   soc=soc/au2cm
