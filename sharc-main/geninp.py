@@ -166,8 +166,8 @@ for i in range(1,trajct+1):
     inpstr = ''' geomfile    "geom"
  veloc       {veltxt}
  
- nstates      5
- actstates    5
+ nstates      2 0 1
+ actstates    2 0 1
  state        2 mch
  coeff        auto
  rngseed       {rngseed}
@@ -179,12 +179,11 @@ for i in range(1,trajct+1):
  
  surf         sharc
  coupling     nacdr
- nogradcorrect
- ekincorrect  parallel_vel
+ gradcorrect
+ ekincorrect  parallel_nac
+ reflect_frustrated parallel_nac
  decoherence_scheme edc
- decoherence_param 0.2
- grad_all
- nac_select
+ decoherence_param 0.1
  eselect      0.5\n'''.format(veltxt = veloc, rngseed = rseed)
     os.system("mkdir -p ../trajdata/traj" + str(i))
     os.system("cp -r ./* ../trajdata/traj" + str(i))
