@@ -180,8 +180,8 @@ for i in range(1,trajct+1):
  surf         sharc
  coupling     nacdr
  gradcorrect
- ekincorrect  parallel_nac
- reflect_frustrated parallel_nac
+ ekincorrect  parallel_vel
+ reflect_frustrated none
  decoherence_scheme edc
  decoherence_param 0.1
  eselect      0.5\n'''.format(veltxt = veloc, rngseed = rseed)
