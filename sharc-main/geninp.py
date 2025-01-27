@@ -110,7 +110,7 @@ if veloc == "external":
             if not targ == 0: # if binning energies
                 if redoing:
                     TE = prevEs[currinit - 1]
-                    print("Energy of initcond " + str(currinit) + " was " + format(TE, "9.3f"))
+                    print("Energy of initcond " + str(currinit) + " was " + format(TE, "12.6f"))
                     if TE > targ + tol or TE < targ - tol:
                         print("Energy out of range")
                         continue
@@ -137,7 +137,7 @@ if veloc == "external":
                     # energy analysis
                     Ekin = float(lines[8+14*currinit].split()[1])*conv
                     TE = QME + Ekin
-                    print("Energy of initcond " + str(currinit) + " is " + format(TE, "9.3f"))
+                    print("Energy of initcond " + str(currinit) + " is " + format(TE, "12.6f"))
                     if TE > targ + tol or TE < targ - tol:
                         print("Energy out of range")
                         continue
