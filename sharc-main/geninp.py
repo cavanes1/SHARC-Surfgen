@@ -179,7 +179,7 @@ for i in range(1,trajct+1):
  
  surf         sharc
  coupling     nacdr
- gradcorrect
+ nogradcorrect
  ekincorrect  parallel_vel
  reflect_frustrated none
  decoherence_scheme edc
