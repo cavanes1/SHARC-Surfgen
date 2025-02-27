@@ -10,7 +10,7 @@ text = '''#!/bin/bash -l
 
 #SBATCH --partition=parallel
 #SBATCH -c 2
-#SBATCH --time=50:00:00
+#SBATCH --time={TM}:00:00
 #SBATCH --job-name={ST}{excl}
 
 ml intel/2020.1
@@ -41,7 +41,8 @@ if not len(excludelist) == 0:
 
 # Submit job
 flname = "script" + sys.argv[1] + ".sh"
+tm = (int(sys.argv[2]) - int(sys.argv[1]))*14.4//60
 f = open(flname, "w")
-f.write(text.format(excl=excl_str, ST=sys.argv[1], EN=sys.argv[2]))
+f.write(text.format(TM=str(tm), excl=excl_str, ST=sys.argv[1], EN=sys.argv[2]))
 f.close()
 os.system("sbatch " + flname)
