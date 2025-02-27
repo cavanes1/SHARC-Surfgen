@@ -41,8 +41,8 @@ if not len(excludelist) == 0:
 
 # Submit job
 flname = "script" + sys.argv[1] + ".sh"
-tm = (int(sys.argv[2]) - int(sys.argv[1]))*14.4//60
+tm = (int(sys.argv[2]) - int(sys.argv[1]))*14.4//60 + 1
 f = open(flname, "w")
-f.write(text.format(TM=str(tm), excl=excl_str, ST=sys.argv[1], EN=sys.argv[2]))
+f.write(text.format(TM=str(int(tm)), excl=excl_str, ST=sys.argv[1], EN=sys.argv[2]))
 f.close()
 os.system("sbatch " + flname)
