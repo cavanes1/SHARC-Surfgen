@@ -73,8 +73,8 @@ program main
   !Field on
   !Electric field strength (a.u. = Ha/ea0) divided by 2
   cavity=0.01*dip(3,1,2)
-  !Energy shift (a.u. = Ha)
-  dressed=0.113927d0
+  !Energy shift (a.u. = Ha) 400nm = 0.113927d0
+  dressed=0.5d0/27.2114
   !write(101,"(10e14.6)")e(1)+dressed,z,cavity,z,soc(:,1,1),soc(:,2,1),soc(:,3,1)
   !write(101,"(10e14.6)")cavity,z,e(2),z,soc(:,1,2),soc(:,2,2),soc(:,3,2)
   !write(101,"(10e14.6)")soc(1,1,1),-soc(2,1,1),soc(1,1,2),-soc(2,1,2),et(1)+dressed,z,z,z,z,z
