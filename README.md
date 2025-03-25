@@ -12,5 +12,5 @@ See the [wiki](https://github.com/cavanes1/SHARC-Surfgen/wiki) for more details.
 4. Run geninp.py using `sbatch geninp.sl`
 6. If using an electric field, compile sharc-surfgen with the field enabled
 7. Submit run.sh with `sbatch submit.sl` or `python parallel.py` in order to run SHARC
-8. Perform analysis using the tools in the trajdata directory via `sbatch collectgeominfo.sh`, and don't forget to account for bad trajectories: `cat slurm-* | grep trajdata | sort -u`
+8. Perform analysis using the tools in the trajdata directory via `sbatch collectgeominfo.sh`, and don't forget to account for bad trajectories: `grep trajdata slurm-* | sort -u`
 9. To clear up space after data is collected, delete the QM directories, e.g., `rm -r trajdata/traj*/QM`
