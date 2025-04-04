@@ -1,3 +1,4 @@
+# Usage: python datarip.py [number of trajectories, default = 5000]
 # Output: data.txt
 
 # module import
@@ -7,58 +8,63 @@ from os import listdir
 import os
 import subprocess
 import sys
+import time
 print("\nModules imported\n")
 
-# analyze present directories
-path = "./"
-dirs = [directory for directory in os.listdir(path) if os.path.isdir(path+directory)]
-
-# extract energies
-# total trajectory energy
-curr = 1
-go = True
-diags = []
-kins = []
-pots = []
-eners = []
-while go:
+def rip_from_traj(traj_num: int) -> dict:
+    '''returns information from all time steps of a specified trajectory'''
     sys.stdout.write("\rExamining trajectory " + str(curr))
     sys.stdout.flush()
-    f = open("traj" + str(curr)  + "/output.lis", "r")
-    lines = f.readlines()
-    f.close()
-    dgst = []
-    ener = []
-    kin = []
-    pot = []
+    with open("traj" + str(curr)  + "/output.lis", "r") as file:
+        lines = file.readlines()
+    data = []
     step = 0
     for line in lines:
         if line[0:4] == "    ":
             if "******" in line:
-                print("\nERROR on geometry (asterisks) of traj " + str(curr))
+                sys.exit("\nERROR on geometry (asterisks) of traj " + str(curr))
                 break
             elif not int(line.split()[0]) == step:
-                print("\nWARNING on time step " + str(step) + " of traj " + str(curr))
-            dgst.append(int(line.split()[2]))
-            ener.append(float(line.split()[6]))
-            kin.append(float(line.split()[4]))
-            pot.append(float(line.split()[5]))
+                sys.exit("\nWARNING on time step " + str(step) + " of traj " + str(curr))
+            data.append(line.split()[2:8])
             step += 1
-    diags.append(dgst)
-    kins.append(kin)
-    pots.append(pot)
-    eners.append(ener)
+    data = np.array(data)
+    return {'diag': data[:, 0].astype(int), 
+            'MCH':  data[:, 1].astype(int), 
+            'kin':  data[:, 2].astype(float), 
+            'pot':  data[:, 3].astype(float), 
+            'tot':  data[:, 4].astype(float), 
+            'amom': data[:, 5].astype(float)}
 
-    # exit loop
+start_time = time.time()
+
+# extract data from all trajectories
+curr = 1
+all_traj = {'diag': [], 'MCH': []} #, 'kin': [], 'pot': [], 'tot': [], 'amom': []}
+max_traj = int(sys.argv[1]) if len(sys.argv) > 1 else 5000 #4987
+while curr <= max_traj:
+    this_traj = rip_from_traj(curr)
+    for key in all_traj:
+        all_traj[key].append(this_traj[key])
     curr += 1
-    if "traj" + str(curr) not in dirs:
-        go = False
-        print("\nLast trajectory: " + str(curr - 1))
+for key in all_traj:
+    all_traj[key] = np.array(all_traj[key])
 
-f = open("data.txt", "w")
-for traj in diags:
-    f.write(str(traj) + "\n")
-for traj in pots:
-    f.write(str(traj) + "\n")
-f.close()
-print("\n")
+# prepare data for population plot
+nstates = 5
+time_limit = 1000 # fs
+fractions = {'diag': [[] for i in range(nstates)], 'MCH': [[] for i in range(nstates)]}
+for step in range(time_limit*2 + 1):
+    for representation in all_traj:
+        time_slice = all_traj[representation][:, step]
+        for i in range(nstates):
+            fractions[representation][i].append(np.count_nonzero(time_slice == i + 1)/max_traj)
+
+print("\n\nData extraction took %s seconds" % (time.time() - start_time))
+
+# save to file
+with open("data.txt", "w") as file:
+    for representation in fractions:
+        file.write(representation + '\n')
+        for state in fractions[representation]:
+            file.write(str(state)[1:-1] + '\n')
