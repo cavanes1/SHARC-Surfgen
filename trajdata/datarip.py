@@ -1,5 +1,5 @@
 # Usage: python datarip.py [number of trajectories, default = 5000]
-# Output: data.txt
+# Output: data.txt, formatted with each line like 'diag', state 1, ..., state 5, 'MCH', state1, ..., state 5
 
 # module import
 import numpy as np
