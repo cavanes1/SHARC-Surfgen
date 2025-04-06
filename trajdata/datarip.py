@@ -13,19 +13,19 @@ print("\nModules imported\n")
 
 def rip_from_traj(traj_num: int) -> dict:
     '''returns information from all time steps of a specified trajectory'''
-    sys.stdout.write("\rExamining trajectory " + str(curr))
+    sys.stdout.write("\rExamining trajectory " + str(traj_num))
     sys.stdout.flush()
-    with open("traj" + str(curr)  + "/output.lis", "r") as file:
+    with open("traj" + str(traj_num)  + "/output.lis", "r") as file:
         lines = file.readlines()
     data = []
     step = 0
     for line in lines:
         if line[0:4] == "    ":
             if "******" in line:
-                sys.exit("\nERROR on geometry (asterisks) of traj " + str(curr))
+                sys.exit("\nERROR on geometry (asterisks) of traj " + str(traj_num))
                 break
             elif not int(line.split()[0]) == step:
-                sys.exit("\nWARNING on time step " + str(step) + " of traj " + str(curr))
+                sys.exit("\nWARNING on time step " + str(step) + " of traj " + str(traj_num))
             data.append(line.split()[2:8])
             step += 1
     data = np.array(data)
