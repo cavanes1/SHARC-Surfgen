@@ -1,5 +1,6 @@
 # Usage: python datarip.py [number of trajectories, default = 5000]
 # Output: data.txt, formatted with each line like 'diag', state 1, ..., state 5, 'MCH', state1, ..., state 5
+#                   repeating for each channel
 
 # module import
 import numpy as np
@@ -38,33 +39,72 @@ def rip_from_traj(traj_num: int) -> dict:
 
 start_time = time.time()
 
+# read in output file
+with open("output.txt", "r") as f:
+    lines = f.readlines()
+channel_results = []
+trajcount = 0
+for i, line in enumerate(lines):
+    if " MCH:" in line:
+        trajcount += 1
+        dummy, channel, dummy, diag, dummy, MCH = line.split()
+        diag, MCH, tm = int(diag), int(MCH), float(lines[i - 1].split()[-2])
+        if channel == 'molecular':
+            if MCH > 2:
+                channel_results.append('molX')
+            else:
+                channel_results.append('mola')
+        else:
+            channel_results.append(channel)
+
 # extract data from all trajectories
 curr = 1
-all_traj = {'diag': [], 'MCH': []} #, 'kin': [], 'pot': [], 'tot': [], 'amom': []}
-max_traj = int(sys.argv[1]) if len(sys.argv) > 1 else 5000 #4987
+dict_list = {'all':            {'diag': [], 'MCH': []}, 
+             'radical':        {'diag': [], 'MCH': []},
+             'molX':           {'diag': [], 'MCH': []},
+             'mola':           {'diag': [], 'MCH': []},
+             'mol':            {'diag': [], 'MCH': []},
+             'NoDissociation': {'diag': [], 'MCH': []},
+             'UNDETERMINABLE': {'diag': [], 'MCH': []}}
+max_traj = int(sys.argv[1]) if len(sys.argv) > 1 else trajcount
 while curr <= max_traj:
     this_traj = rip_from_traj(curr)
-    for key in all_traj:
-        all_traj[key].append(this_traj[key])
+    curr_channel = channel_results[curr - 1]
+    for key in dict_list[curr_channel]:
+        dict_list[curr_channel][key].append(this_traj[key]) # respective channel
+        dict_list['all'][key].append(this_traj[key]) # all channels
+        if curr_channel[:3] == 'mol':
+            dict_list['mol'][key].append(this_traj[key]) # molecular channel (both)
     curr += 1
-for key in all_traj:
-    all_traj[key] = np.array(all_traj[key])
+delete_list = []
+for dictionary in dict_list:
+    if dict_list[dictionary]['MCH'] == []:
+        delete_list.append(dictionary)
+    else:
+        for key in dict_list[dictionary]:
+            dict_list[dictionary][key] = np.array(dict_list[dictionary][key])
+for dictionary in delete_list:
+    del dict_list[dictionary]
 
 # prepare data for population plot
 nstates = 5
 time_limit = 1000 # fs
-fractions = {'diag': [[] for i in range(nstates)], 'MCH': [[] for i in range(nstates)]}
-for step in range(time_limit*2 + 1):
-    for representation in all_traj:
-        time_slice = all_traj[representation][:, step]
-        for i in range(nstates):
-            fractions[representation][i].append(np.count_nonzero(time_slice == i + 1)/max_traj)
+for dictionary in dict_list:
+    old = dict_list[dictionary]
+    new = {'diag': [[] for i in range(nstates)], 'MCH': [[] for i in range(nstates)]}
+    for step in range(time_limit*2 + 1):
+        for representation in old:
+            time_slice = old[representation][:, step]
+            for i in range(nstates):
+                new[representation][i].append(np.count_nonzero(time_slice == i + 1)/len(old['MCH']))
+    dict_list[dictionary] = new
 
 print("\n\nData extraction took %s seconds" % (time.time() - start_time))
 
 # save to file
 with open("data.txt", "w") as file:
-    for representation in fractions:
-        file.write(representation + '\n')
-        for state in fractions[representation]:
-            file.write(str(state)[1:-1] + '\n')
+    for dictionary in dict_list:
+        for representation in dict_list[dictionary]:
+            file.write(dictionary + ':   ' + representation + '\n')
+            for state in dict_list[dictionary][representation]:
+                file.write(str(state)[1:-1] + '\n')
