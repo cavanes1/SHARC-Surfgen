@@ -107,4 +107,4 @@ with open("data.txt", "w") as file:
         for representation in dict_list[dictionary]:
             file.write(dictionary + ':   ' + representation + '\n')
             for state in dict_list[dictionary][representation]:
-                file.write(str(state)[1:-1] + '\n')
+                file.write(str(state)[1:-1].replace(',', '') + '\n')
