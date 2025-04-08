@@ -1,4 +1,4 @@
-# Usage: python datarip.py [number of trajectories, default = 5000]
+# Usage: python datarip.py [number of trajectories, default is number in output.txt]
 # Output: data.txt, formatted with each line like 'diag', state 1, ..., state 5, 'MCH', state1, ..., state 5
 #                   repeating for each channel
 
@@ -56,6 +56,7 @@ for i, line in enumerate(lines):
                 channel_results.append('mola')
         else:
             channel_results.append(channel)
+print(f"Read {trajcount} trajectories from output.txt")
 
 # extract data from all trajectories
 curr = 1
@@ -67,6 +68,7 @@ dict_list = {'all':            {'diag': [], 'MCH': []},
              'NoDissociation': {'diag': [], 'MCH': []},
              'UNDETERMINABLE': {'diag': [], 'MCH': []}}
 max_traj = int(sys.argv[1]) if len(sys.argv) > 1 else trajcount
+print(f"\nAnalyzing {max_traj} trajectories")
 while curr <= max_traj:
     this_traj = rip_from_traj(curr)
     curr_channel = channel_results[curr - 1]
@@ -76,6 +78,9 @@ while curr <= max_traj:
         if curr_channel[:3] == 'mol':
             dict_list['mol'][key].append(this_traj[key]) # molecular channel (both)
     curr += 1
+print('\n')
+
+# identify which channels no trajectories were assigned to
 delete_list = []
 for dictionary in dict_list:
     if dict_list[dictionary]['MCH'] == []:
@@ -85,6 +90,7 @@ for dictionary in dict_list:
             dict_list[dictionary][key] = np.array(dict_list[dictionary][key])
 for dictionary in delete_list:
     del dict_list[dictionary]
+    print("No trajectories were assigned to " + dictionary)
 
 # prepare data for population plot
 nstates = 5
@@ -99,7 +105,7 @@ for dictionary in dict_list:
                 new[representation][i].append(np.count_nonzero(time_slice == i + 1)/len(old['MCH']))
     dict_list[dictionary] = new
 
-print("\n\nData extraction took %s seconds" % (time.time() - start_time))
+print("\nData extraction took %s seconds" % (time.time() - start_time))
 
 # save to file
 with open("data.txt", "w") as file:
@@ -108,3 +114,4 @@ with open("data.txt", "w") as file:
             file.write(dictionary + ':   ' + representation + '\n')
             for state in dict_list[dictionary][representation]:
                 file.write(str(state)[1:-1].replace(',', '') + '\n')
+print("\nSaved to data.txt\n")

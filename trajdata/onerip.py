@@ -5,10 +5,6 @@
 
 # module import
 import numpy as np
-import math
-from os import listdir
-import os
-import subprocess
 import sys
 import time
 print("\nModules imported\n")
@@ -49,14 +45,17 @@ with open("traj" + str(traj_num)  + "/output.dat", "r") as file:
 time_limit = 1000 # fs
 for step in range(time_limit*2 + 1):
     start_line = 35 + step*62
+    # Hamiltonian elements
     H11.append(float(lines[start_line + 3].split()[0]))
     H12.append(float(lines[start_line + 3].split()[2]))
     H22.append(float(lines[start_line + 4].split()[2]))
     H33.append(float(lines[start_line + 5].split()[4]))
+    # atom positions in Bohr radii
     Nx, Ny, Nz = lines[start_line + 53].split()
     H1x, H1y, H1z = lines[start_line + 54].split()
     H2x, H2y, H2z = lines[start_line + 55].split()
     H3x, H3y, H3z = lines[start_line + 56].split()
+    # calculate N-H bond distances
     rNH1.append(np.sqrt((float(Nx) - float(H1x))**2 + (float(Ny) - float(H1y))**2 + (float(Nz) - float(H1z))**2))
     rNH2.append(np.sqrt((float(Nx) - float(H2x))**2 + (float(Ny) - float(H2y))**2 + (float(Nz) - float(H2z))**2))
     rNH3.append(np.sqrt((float(Nx) - float(H3x))**2 + (float(Ny) - float(H3y))**2 + (float(Nz) - float(H3z))**2))
@@ -64,16 +63,21 @@ print("\n\nData extraction took %s seconds" % (time.time() - start_time))
 
 # save to file
 with open(f"{traj_num}.txt", "w") as file:
+    # electronic state
     file.write(str(list(lis_data['diag']))[1:-1].replace(',', '') + '\n')
     file.write(str(list(lis_data['MCH']))[1:-1].replace(',', '') + '\n')
+    # Hamiltonian elements
     file.write(str(H11)[1:-1].replace(',', '') + '\n')
     file.write(str(H22)[1:-1].replace(',', '') + '\n')
     file.write(str(H33)[1:-1].replace(',', '') + '\n')
     file.write(str(H12)[1:-1].replace(',', '') + '\n')
+    # angular momentum
     file.write(str(list(lis_data['amom']))[1:-1].replace(',', '') + '\n')
+    # N-H bond distances
     file.write(str(rNH1)[1:-1].replace(',', '') + '\n')
     file.write(str(rNH2)[1:-1].replace(',', '') + '\n')
     file.write(str(rNH3)[1:-1].replace(',', '') + '\n')
+print(f"\nSaved result to {traj_num}.txt\n")
 
 # perform analysis and print to terminal
 print("   ", lis_data['diag'][0], "   ", lis_data['MCH'][0], format(0, "8.1f"))

@@ -1,9 +1,11 @@
-# Outputs: readcollect.txt, formatted with each line like species, amount at each time step, all creation times (except for NH3), looping
+# Outputs: readcollect.txt [number of trajectories, default is lesser of 5000 or number in output.txt]
+#              formatted with each line like species, amount at each time step, all creation times (except for NH3), looping
 #          terminal
 
 # Module imports
 from collections import Counter
 import numpy as np
+import sys
 
 # read in output file
 with open("output.txt", "r") as f:
@@ -15,9 +17,12 @@ results = {"radical":        [[], [], []],
            "UNDETERMINABLE": [[], [], []],
            "NoDissociation": [[], [], []]}
 NHX_times, NHa_times = [], []
+max_traj = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
 trajcount = 0
 for i, line in enumerate(lines):
-    if " MCH:" in line:
+    if trajcount >= max_traj:
+        break
+    elif " MCH:" in line:
         trajcount += 1
         dummy, channel, dummy, diag, dummy, MCH = line.split()
         diag, MCH, time = int(diag), int(MCH), float(lines[i - 1].split()[-2])
