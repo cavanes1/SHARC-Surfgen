@@ -135,19 +135,19 @@ for entry in data:
                     print(format(float(element), "8.4f"), end="")
                 print()
             stoptime = entry['time']
-            print(stoptime)
+            print("Trajectory terminated at " + str(stoptime) + " fs")
             break
 
 if not stop_processing: # no dissociation
     entry = data[-1]
     print(f"Stopped due to no dissociation by {entry['time']} fs")
     print(f"Result: NoDissociation     diag: {entry['state1']}     MCH:  {entry['state2']}")
-    print(stoptime)
+    print("Trajectory did not terminate before " + str(stoptime) + " fs")
 
 # Save geometry and model energy
 def rip_from_traj(traj_num: int) -> dict:
     '''returns information from all time steps of a specified trajectory'''
-    print("\rExamining trajectory " + str(traj_num))
+    print("\nExamining trajectory " + str(traj_num))
     with open("traj" + str(traj_num)  + "/output.lis", "r") as file:
         lines = file.readlines()
     data = []
@@ -193,7 +193,7 @@ H3 = [float(x) for x in lines[start_line + 56].split()]
 BUcolpath = '../../../COL/BU' # Path to the COLUMBUS calculation
 colpath   = direc + 'COL'
 if runcol:
-    os.system("cp -rv " + BUcolpath + " " + colpath)
+    os.system("cp -r " + BUcolpath + " " + colpath)
     with open(colpath + '/geom', "w") as f:
         f.write(" N     7.0" + format(N[0],  "14.8f") + format(N[1],  "14.8f") + format(N[2],  "14.8f") + "   14.00307401\n")
         f.write(" H     1.0" + format(H1[0], "14.8f") + format(H1[1], "14.8f") + format(H1[2], "14.8f") + "    1.00782504\n")
@@ -201,7 +201,7 @@ if runcol:
         f.write(" H     1.0" + format(H3[0], "14.8f") + format(H3[1], "14.8f") + format(H3[2], "14.8f") + "    1.00782504\n")
 
     rv = subprocess.run(["sbatch", "script.sh"], cwd=colpath, capture_output=True)
-    print(rv.stdout.decode('utf8'))
+    print("\n" + rv.stdout.decode('utf8'))
 else:
     eadjust = 56.4759855158
     eV = 0.05512395
