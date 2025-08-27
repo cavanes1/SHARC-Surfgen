@@ -1,5 +1,5 @@
 # SHARC-Surfgen
-This program was used for an upcoming research paper that will be published in the Journal of Chemical Physics.
+This program was used for [this research paper](https://doi.org/10.1063/5.0284970) published in the Journal of Chemical Physics.
 An earlier version was used for [this research paper](https://doi.org/10.1021/acs.jpclett.4c02312) published in the Journal of Physical Chemistry Letters.
 This code allows the [SHARC](https://sharc-md.org/) molecular dynamics program to use quantum chemistry data from potential energy surfaces constructed by Surfgen.
 This repository includes the ammonia singlet and triplet surfaces generated using neural networks by the [Yarkony Group](https://github.com/yarkonygrp/).
